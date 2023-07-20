@@ -21,7 +21,7 @@ def create_text_files_from_excel_column(excel_file, column_name):
 
 if __name__ == "__main__":
     # Replace with the actual path to your Excel file
-    excel_file_path = "/Users/dennisjohns/Desktop/TestExcelScript.xlsx"
+    excel_file_path = "TestExcelScript.xlsx"
     # Replace with the actual column name containing the data
     column_to_extract = "test"
 
