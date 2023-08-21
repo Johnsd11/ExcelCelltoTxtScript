@@ -1,8 +1,21 @@
 import pandas as pd
 import os
+import string
+
+# 13 = id
+# 35 = RPT_TEXT
+# 47 = RPT_ID
 
 
-def create_text_files_from_excel_column(excel_file, column_name):
+def remove_non_ascii (a_str):
+    ascii_chars = set(string.printable)
+
+    return ''.join(
+        filter(lambda x: x in ascii_chars, a_str)
+    )
+
+
+def create_text_files_from_excel_column(excel_file):
     # Read the Excel file
     df = pd.read_excel(excel_file)
 
@@ -11,18 +24,22 @@ def create_text_files_from_excel_column(excel_file, column_name):
     os.makedirs(output_folder, exist_ok=True)
 
     # Iterate through the cells in the specified column
-    for index, value in enumerate(df[column_name]):
-        if pd.notna(value):  # Check if the cell is not empty
+    for index, row in df.iterrows():
+        Pid = str(row["id"])
+        report_id = str(row["RPT_ID"])
+        text = row["RPT_TEXT"]
+
+        if pd.notna(text):  # Check if the cell is not empty
             # Create a new text file with the cell's data
-            file_name = f"{output_folder}/text_{index+2}.txt"
+            os.makedirs(output_folder+ "/patient_" + Pid, exist_ok=True)
+            file_name = f"{output_folder}/patient_{Pid}/report_{report_id}.txt"
+            cleaned_value = remove_non_ascii(text)
             with open(file_name, "w") as f:
-                f.write(str(value))
+                f.write(str(cleaned_value))
 
 
 if __name__ == "__main__":
     # Replace with the actual path to your Excel file
     excel_file_path = "TestExcelScript.xlsx"
-    # Replace with the actual column name containing the data
-    column_to_extract = "test"
 
-    create_text_files_from_excel_column(excel_file_path, column_to_extract)
+    create_text_files_from_excel_column(excel_file_path)
